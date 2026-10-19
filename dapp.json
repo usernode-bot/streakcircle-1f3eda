@@ -1,0 +1,11 @@
+{
+  "description": "Track daily habits and cheer each other on as a group",
+  "icon": {
+    "emoji": "🔥"
+  },
+  "secrets": [],
+  "governance": {
+    "preset": "you_or_the_group"
+  },
+  "tests": []
+}
