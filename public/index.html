@@ -334,15 +334,13 @@
         var habits = state.habits;
         $('avatar').hidden = !state.account;
 
+        $('heading').hidden = false;
+        $('heading').textContent = state.weekday + ' check-in';
+        $('subline').hidden = false;
         if (!habits.length) {
-          $('heading').textContent = '';
-          $('heading').hidden = true;
-          $('subline').hidden = true;
+          $('subline').textContent = '0 habits yet';
         } else {
-          $('heading').hidden = false;
-          $('heading').textContent = state.weekday + ' check-in';
           var done = habits.filter(function (h) { return h.checkedToday; }).length;
-          $('subline').hidden = false;
           $('subline').textContent = done + ' of ' + habits.length + ' habits done today';
         }
 
@@ -352,7 +350,9 @@
         $('habits-list').innerHTML = habits.map(habitRow).join('');
         $('habits-empty').hidden = habits.length > 0 || addFormOpen;
         $('habits-list').hidden = habits.length === 0;
-        $('add-btn').hidden = habits.length >= 5 || addFormOpen || !state.account;
+        // The empty block's filled "Add a habit" is the one button then; the
+        // outlined one comes back once a habit exists.
+        $('add-btn').hidden = habits.length === 0 || habits.length >= 5 || addFormOpen || !state.account;
         $('limit-note').hidden = habits.length < 5 || addFormOpen;
 
         var lb = state.leaderboard;
