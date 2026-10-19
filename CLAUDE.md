@@ -95,24 +95,37 @@ tables you've marked private), etc.
 
 ## About StreakCircle
 
-Track daily habits and cheer each other on as a group
-
-_(add a sentence or two more of product context here so Claude Code has a
-shared understanding of what this app is for)_
+A habit streak tracker for the community: members log daily habits, see
+each other's streaks, and a weekly leaderboard celebrates consistency
+rather than perfection. One home screen whose job is today's check-in:
+up to 5 habits per person, tap a big circle to check in each day (tap
+again to undo), a streak counter per habit, this week's group leaderboard,
+and everyone's streaks below. Weeks run Monday to Sunday; one missed day
+per habit per week is a grace day and keeps the streak alive. Check-ins
+are for today only, never backdated. The week's "today" is the day on the
+viewer's own device clock.
 
 ## Design
 
-This app's look. The first real version fills in the blanks; every later
-change follows it, and updates it when a request changes the look on purpose.
+This app's look. Set by the first version's spec; every later change
+follows it, and updates it when a request changes the look on purpose.
 
-- **Palette:** _(name the accent, any second colour and the neutrals, e.g.
-  "accent: tomato red; second: basil green; neutrals: warm greys")_
-- **Signature element:** _(the one thing on screen drawn from this app's
-  subject, which no other app would have)_
-- **Type scale:** `text-title`, `text-heading`, `text-body`, `text-small`
-  _(change their sizes in `tailwind.config.js` if you must, not their number)_
-- **One fixed look:** _(only for an app drawn as its own scene, such as a
-  game: which look, and why. Otherwise delete this line.)_
+- **Palette:** warm neutrals with a leaf green for check-ins and a soft
+  amber for streaks, first place and grace days. Tokens (light / dark):
+  ground 250 248 244 / 24 21 18; surface 255 255 255 / 34 30 26; raised
+  243 240 234 / 46 41 36; ink (fg) 34 30 26 / 245 241 234; muted
+  98 91 82 / 176 167 155; line 230 225 216 / 64 58 51; accent (green)
+  21 128 61 / 74 222 128 with on-accent white / 5 46 22; amber
+  161 89 6 / 245 180 70 on amber-soft 253 238 205 / 66 44 12.
+- **Signature element:** each habit's week chain — seven dots, Monday to
+  Sunday, that fill in as you check in: solid green for checked days,
+  ringed for today, dashed amber for a grace day.
+- **Type scale:** `text-title`, `text-heading`, `text-body`, `text-small`,
+  in the system's rounded face (`font-rounded`, set in
+  `tailwind.config.js`), which suits a friendly daily habit.
+- The main thing you do is tap a habit's circle, so the green circle is
+  the boldest thing on screen; the group sections below are for reading.
+- The header shows the app's name with no mark.
 
 The kit is in `styles/tailwind-input.css`: colour tokens with a light and
 a dark value (named in `tailwind.config.js`), and a few components
@@ -142,6 +155,14 @@ Re-theme by changing the token values there, keeping every text pair at
 
 ## App-specific conventions
 
-_(optional — e.g. "all currency values stored as integer cents, not
-floats"; "the `posts` table is append-only"; "avoid adding new
-dependencies"; etc.)_
+- The `habits`, `checkins` and `reports` tables are marked
+  `staging:private` (personal habit names and check-in history).
+- Days are plain `YYYY-MM-DD` strings from `req.now` or the `today` the
+  viewer's device sent, compared at UTC midnight. Never `NOW()` or
+  `new Date()` for anything that decides what shows.
+- The week runs Monday to Sunday; the leaderboard ranks by distinct days
+  with at least one check-in, ties share a rank.
+- Staging demo: `?demo=1` on staging only. The viewer's four demo habits
+  are stored once (is_demo, fixed demo_key); the four made-up members are
+  computed from today and never stored. Every query without `demo=1`
+  excludes is_demo rows, so the plain route stays empty for a new account.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <script>
   // usernode-dev-console@1
   (function () {
@@ -64,7 +64,7 @@
   })();
   </script>
   <title>StreakCircle</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2315803d'/><circle cx='50' cy='50' r='18' fill='white'/></svg>">
   <!-- Tailwind, PRECOMPILED for this app (was cdn.tailwindcss.com's
        in-browser engine plus an inline tailwind.config here). The config
        moved to tailwind.config.js in the repo root; npm run build compiles
@@ -109,52 +109,382 @@
   </script>
 </head>
 <body class="min-h-screen bg-ground text-fg">
-  <!-- Built from the design kit in styles/tailwind-input.css: colour tokens
-       that are right in both looks, and components for buttons, fields,
-       lists, cards and data states. The real app keeps the kit; CLAUDE.md's
-       "## Design" says how. -->
-  <!-- (Named in prose on purpose: Tailwind compiles any class-name word in
-       these files, comments included, and the starter should ship only the
-       components its screen uses.) -->
   <!-- usernode-spec-screens@1: the screens the spec drew, carried over by the platform as this
        first version's starting point. Their styles are in public/screens.css.
-       Change them where behaviour needs it; do not redraw them. -->
+       Change them where behaviour needs it; do not redraw them.
+       The drawn rows are rendered from /api/home data by the script below,
+       with the same markup; the drawn habit row is kept here as the row to
+       copy:
+       <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Morning walk</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">12 days</div></li> -->
   <div data-spec-screen="1">
     <div class="app">
-        <div class="top">
-          <div class="brand">StreakCircle</div>
-          <div class="avatar">Y</div>
-        </div>
-        <h1>Thursday check-in</h1>
-        <p class="sub">3 of 4 habits done today</p>
+      <p class="demo-note" id="demo-note" data-usernode-demo-note hidden>Staging demo: made-up people and habits</p>
+      <div class="top">
+        <div class="brand">StreakCircle</div>
+        <div class="avatar" id="avatar" hidden>Y</div>
+      </div>
 
-        <div class="section-label"><span>Your habits, 4 of 5</span><button class="link">Edit</button></div>
+      <!-- Loading: the screen's own shape, skeleton bars where text goes. -->
+      <div id="loading">
+        <div class="skeleton sk-title"></div>
+        <div class="skeleton sk-sub"></div>
+        <div class="section-label"><span class="skeleton sk-line"></span></div>
         <ul class="list">
-          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Morning walk</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">12 days</div></li>
-          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Read 20 pages</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">4 days</div></li>
-          <li class="list-row habit"><div class="chk"></div><div class="grow"><div class="name">Stretch for 10 minutes</div><div class="dots"><span class="d f"></span><span class="d g"></span><span class="d f"></span><span class="d t"></span><span class="d"></span><span class="d"></span><span class="d"></span></div><div class="grace">Grace day used Tuesday</div></div><div class="streak">9 days</div></li>
-          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">No phone after 10pm</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">26 days</div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
         </ul>
-        <button class="btn-secondary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a habit</button>
-
-        <div class="section-label"><span>This week's leaderboard</span><span>Most days checked in</span></div>
+        <div class="section-label"><span class="skeleton sk-line"></span></div>
         <ul class="list">
-          <li class="list-row"><div class="rank first">1</div><div class="pa">PR</div><div class="grow"><div class="name">Priya</div><div class="bar"><i style="width:57%"></i></div></div><div class="num"><div class="big">4 days</div><div class="meta">12 check-ins</div></div></li>
-          <li class="list-row you"><div class="rank first">1</div><div class="pa">Y</div><div class="grow"><div class="name">You</div><div class="bar"><i style="width:57%"></i></div></div><div class="num"><div class="big">4 days</div><div class="meta">14 check-ins</div></div></li>
-          <li class="list-row"><div class="rank">3</div><div class="pa">MA</div><div class="grow"><div class="name">Marcus</div><div class="bar"><i style="width:43%"></i></div></div><div class="num"><div class="big">3 days</div><div class="meta">6 check-ins</div></div></li>
-          <li class="list-row"><div class="rank">3</div><div class="pa">JO</div><div class="grow"><div class="name">Joan</div><div class="bar"><i style="width:43%"></i></div></div><div class="num"><div class="big">3 days</div><div class="meta">5 check-ins</div></div></li>
-          <li class="list-row"><div class="rank">5</div><div class="pa">TO</div><div class="grow"><div class="name">Tomás</div><div class="bar"><i style="width:14%"></i></div></div><div class="num"><div class="big">1 day</div><div class="meta">1 check-in</div></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-bar"></div></div><div class="skeleton sk-num"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-bar"></div></div><div class="skeleton sk-num"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-bar"></div></div><div class="skeleton sk-num"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-bar"></div></div><div class="skeleton sk-num"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-bar"></div></div><div class="skeleton sk-num"></div></li>
         </ul>
-
-        <div class="section-label"><span>Everyone's streaks</span><span>Longest running</span></div>
+        <div class="section-label"><span class="skeleton sk-line"></span></div>
         <ul class="list">
-          <li class="list-row"><div class="pa">PR</div><div class="grow"><div class="name">Priya</div><div class="meta">Meditate, Journal, Run</div></div><div class="streak">41 days</div><button class="more" aria-label="More for Priya"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
-          <li class="list-row"><div class="pa">MA</div><div class="grow"><div class="name">Marcus</div><div class="meta">Guitar practice, Water</div></div><div class="streak">18 days</div><button class="more" aria-label="More for Marcus"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
-          <li class="list-row"><div class="pa">JO</div><div class="grow"><div class="name">Joan</div><div class="meta">Garden, Read, Stretch</div></div><div class="streak">9 days</div><button class="more" aria-label="More for Joan"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
-          <li class="list-row"><div class="pa">TO</div><div class="grow"><div class="name">Tomás</div><div class="meta">Spanish lesson</div></div><div class="streak">3 days</div><button class="more" aria-label="More for Tomás"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row"><div class="skeleton sk-pa"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
         </ul>
       </div>
+
+      <!-- Error: what failed, what still works, Retry. -->
+      <div class="state-error" id="error" hidden>
+        <div class="name">Your habits couldn't be loaded</div>
+        <p class="meta">Your check-ins are saved. Try again in a moment.</p>
+        <button class="btn-primary" id="retry">Retry</button>
+      </div>
+
+      <!-- Loaded: everything on the screen, filled from /api/home. -->
+      <div id="main" hidden>
+        <h1 id="heading"></h1>
+        <p class="sub" id="subline" hidden></p>
+
+        <div class="section-label"><span id="habits-label">Your habits</span><button class="link" id="edit-btn" hidden>Edit</button></div>
+        <ul class="list" id="habits-list"></ul>
+        <div class="state-empty" id="habits-empty" hidden>
+          <div class="name">Start your first habit</div>
+          <p class="meta">Add up to five habits and tap to check in each day.</p>
+          <button class="btn-primary" id="empty-add">Add a habit</button>
+        </div>
+        <form id="add-form" hidden>
+          <div class="form-actions">
+            <button type="button" class="link" id="add-cancel">Cancel</button>
+            <button type="submit" class="btn-primary" id="add-save">Add</button>
+          </div>
+          <label class="section-label" for="habit-name">Habit name</label>
+          <input class="field" id="habit-name" name="name" maxlength="60" placeholder="e.g. Drink water" autocomplete="off">
+        </form>
+        <button class="btn-secondary" id="add-btn" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a habit</button>
+        <p class="meta limit-note" id="limit-note" hidden>5 of 5 habits. Remove one to add another.</p>
+
+        <div class="section-label"><span>This week's leaderboard</span><span>Most days checked in</span></div>
+        <ul class="list" id="leaderboard"></ul>
+
+        <div class="section-label"><span>Everyone's streaks</span><span>Longest running</span></div>
+        <ul class="list" id="streaks"></ul>
+      </div>
+
+      <p class="save-error" id="save-error" hidden></p>
+    </div>
   </div>
   <!-- /usernode-spec-screens@1 -->
+  <script>
+    (function () {
+      'use strict';
+      var CHECK_SVG = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+      var MORE_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
+      var WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var params = new URLSearchParams(location.search);
+      var TOKEN = params.get('token');
+      var DEMO = params.get('demo') === '1';
+      var state = null;
+      var editing = false;
+      var today = '';
+
+      var $ = function (id) { return document.getElementById(id); };
+      var main = $('main'), loading = $('loading'), errorBox = $('error');
+      var demoNote = $('demo-note'), saveError = $('save-error');
+
+      // "Today" on the viewer's own device clock (the platform's preview
+      // now, when the page was opened as of a chosen moment).
+      function todayStr() {
+        var now = (window.usernode && window.usernode.previewNow)
+          ? new Date(window.usernode.previewNow) : new Date();
+        return now.getFullYear() + '-' +
+          String(now.getMonth() + 1).padStart(2, '0') + '-' +
+          String(now.getDate()).padStart(2, '0');
+      }
+
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      function initials(name) {
+        var p = String(name).trim().split(/\s+/);
+        var a = (p[0] || '?').charAt(0);
+        var b = p.length > 1 ? p[1].charAt(0) : ((p[0] || '').charAt(1) || '');
+        return (a + b).toUpperCase() || '?';
+      }
+
+      function plural(n, one, rest) { return n === 1 ? one : rest; }
+
+      function api(path, opts) {
+        opts = opts || {};
+        var url = new URL(path, location.origin);
+        if (DEMO || (state && state.demo)) url.searchParams.set('demo', '1');
+        var headers = {};
+        if (TOKEN) headers['x-usernode-token'] = TOKEN;
+        var previewNow = window.usernode && window.usernode.previewNow;
+        if (previewNow) headers['x-usernode-now'] = previewNow;
+        if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
+        return fetch(url.pathname + url.search, {
+          method: opts.method || 'GET',
+          headers: headers,
+          body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+        }).then(function (r) {
+          if (!r.ok) {
+            var err = new Error('HTTP ' + r.status);
+            err.status = r.status;
+            throw err;
+          }
+          return r.json();
+        });
+      }
+
+      function weekdayName(dayStr) {
+        var d = new Date(dayStr + 'T00:00:00Z');
+        return WEEKDAYS[d.getUTCDay()] || '';
+      }
+
+      function showSaveError(msg) {
+        saveError.textContent = msg;
+        saveError.hidden = false;
+        clearTimeout(showSaveError.t);
+        showSaveError.t = setTimeout(function () { saveError.hidden = true; }, 4000);
+      }
+
+      // ── Render ──────────────────────────────────────────────────────────
+      function habitRow(h) {
+        var dots = h.week.map(function (s) {
+          return '<span class="d' + (s ? ' ' + s : '') + '"></span>';
+        }).join('');
+        var grace = h.graceDay
+          ? '<div class="grace">Grace day used ' + esc(weekdayName(h.graceDay)) + '</div>' : '';
+        var remove = editing
+          ? '<button class="remove" data-remove="' + h.id + '" aria-label="Remove ' + esc(h.name) + '">Remove</button>' : '';
+        return '<li class="list-row habit" data-habit-row="' + h.id + '">' +
+          '<button class="chk' + (h.checkedToday ? ' on' : '') + '" data-checkin="' + h.id + '"' +
+          ' aria-pressed="' + h.checkedToday + '" aria-label="' +
+          (h.checkedToday ? 'Undo check-in' : 'Check in') + ': ' + esc(h.name) + '">' +
+          (h.checkedToday ? CHECK_SVG : '') + '</button>' +
+          '<div class="grow"><div class="name">' + esc(h.name) + '</div>' +
+          '<div class="dots">' + dots + '</div>' + grace + '</div>' +
+          '<div class="streak">' + plural(h.streak, '1 day', h.streak + ' days') + '</div>' +
+          remove + '</li>';
+      }
+
+      function paintHabit(h) {
+        var li = document.querySelector('[data-habit-row="' + h.id + '"]');
+        if (!li) return;
+        var btn = li.querySelector('.chk');
+        btn.classList.toggle('on', h.checkedToday);
+        btn.setAttribute('aria-pressed', String(h.checkedToday));
+        btn.setAttribute('aria-label', (h.checkedToday ? 'Undo check-in' : 'Check in') + ': ' + h.name);
+        btn.innerHTML = h.checkedToday ? CHECK_SVG : '';
+        var idx = (new Date(today + 'T00:00:00Z').getUTCDay() + 6) % 7;
+        var dot = li.querySelectorAll('.d')[idx];
+        if (dot) dot.className = 'd' + (h.checkedToday ? ' f' : ' t');
+      }
+
+      function leaderboardRow(e) {
+        var width = Math.round((e.days / 7) * 100);
+        return '<li class="list-row' + (e.you ? ' you' : '') + '">' +
+          '<div class="rank' + (e.rank === 1 ? ' first' : '') + '">' + e.rank + '</div>' +
+          '<div class="pa">' + (e.you ? 'Y' : esc(initials(e.username))) + '</div>' +
+          '<div class="grow"><div class="name">' + esc(e.you ? 'You' : e.username) + '</div>' +
+          '<div class="bar"><i style="width:' + width + '%"></i></div></div>' +
+          '<div class="num"><div class="big">' + plural(e.days, '1 day', e.days + ' days') + '</div>' +
+          '<div class="meta">' + plural(e.checkins, '1 check-in', e.checkins + ' check-ins') + '</div></div></li>';
+      }
+
+      function streakRow(s) {
+        var menu = '<li class="list-row menu-row" data-menu-for="' + esc(s.userId) + '" hidden>' +
+          '<span class="meta grow">Report ' + esc(s.username) + "'s" + ' habits to the keepers?</span>' +
+          '<button class="link report-btn" data-report="' + esc(s.userId) + '">Report</button>' +
+          '<button class="link menu-cancel">Cancel</button></li>';
+        return '<li class="list-row">' +
+          '<div class="pa">' + esc(initials(s.username)) + '</div>' +
+          '<div class="grow"><div class="name">' + esc(s.username) + '</div>' +
+          '<div class="meta">' + esc(s.habitNames) + '</div></div>' +
+          '<div class="streak">' + plural(s.streak, '1 day', s.streak + ' days') + '</div>' +
+          '<button class="more" data-more="' + esc(s.userId) + '" aria-label="More for ' + esc(s.username) + '">' +
+          MORE_SVG + '</button></li>' + menu;
+      }
+
+      function renderMain() {
+        today = state.today;
+        demoNote.hidden = !state.demo;
+        var habits = state.habits;
+        $('avatar').hidden = !state.account;
+
+        if (!habits.length) {
+          $('heading').textContent = '';
+          $('heading').hidden = true;
+          $('subline').hidden = true;
+        } else {
+          $('heading').hidden = false;
+          $('heading').textContent = state.weekday + ' check-in';
+          var done = habits.filter(function (h) { return h.checkedToday; }).length;
+          $('subline').hidden = false;
+          $('subline').textContent = done + ' of ' + habits.length + ' habits done today';
+        }
+
+        $('habits-label').textContent = 'Your habits, ' + habits.length + ' of 5';
+        $('edit-btn').hidden = habits.length === 0;
+        $('edit-btn').textContent = editing ? 'Done' : 'Edit';
+        $('habits-list').innerHTML = habits.map(habitRow).join('');
+        $('habits-empty').hidden = habits.length > 0 || addFormOpen;
+        $('habits-list').hidden = habits.length === 0;
+        $('add-btn').hidden = habits.length >= 5 || addFormOpen || !state.account;
+        $('limit-note').hidden = habits.length < 5 || addFormOpen;
+
+        var lb = state.leaderboard;
+        $('leaderboard').innerHTML = lb.length
+          ? lb.map(leaderboardRow).join('')
+          : '<li class="list-row"><span class="meta">No check-ins yet this week.</span></li>';
+        $('streaks').innerHTML = state.streaks.length
+          ? state.streaks.map(streakRow).join('')
+          : '<li class="list-row"><span class="meta">No one has started a streak yet.</span></li>';
+
+        main.hidden = false;
+        loading.hidden = true;
+        errorBox.hidden = true;
+      }
+
+      function load(opts) {
+        opts = opts || {};
+        if (!opts.silent) {
+          main.hidden = true;
+          loading.hidden = false;
+          errorBox.hidden = true;
+        }
+        var t = todayStr();
+        return api('/api/home?today=' + t).then(function (data) {
+          state = data;
+          today = data.today;
+          renderMain(); // after a silent refresh, quietly re-renders with new counts
+        }, function (err) {
+          if (opts.silent && state) {
+            showSaveError("Couldn't refresh just now. Your change was saved.");
+            return;
+          }
+          if (opts.silent) return;
+          loading.hidden = true;
+          main.hidden = true;
+          errorBox.hidden = false;
+        });
+      }
+
+      // ── Actions ─────────────────────────────────────────────────────────
+      function toggleCheckin(habit) {
+        var was = habit.checkedToday;
+        habit.checkedToday = !was;
+        paintHabit(habit);
+        var done = state.habits.filter(function (h) { return h.checkedToday; }).length;
+        $('subline').textContent = done + ' of ' + state.habits.length + ' habits done today';
+        api('/api/habits/' + habit.id + '/checkins/' + today,
+            { method: was ? 'DELETE' : 'PUT' })
+          .then(function () { return load({ silent: true }); })
+          .catch(function () {
+            habit.checkedToday = was;
+            paintHabit(habit);
+            showSaveError("Couldn't save that check-in. Your streak is unchanged.");
+          });
+      }
+
+      var addFormOpen = false;
+      function openAddForm() {
+        addFormOpen = true;
+        $('add-form').hidden = false;
+        $('add-btn').hidden = true;
+        $('habits-empty').hidden = true;
+        $('limit-note').hidden = true;
+        $('habit-name').focus();
+      }
+      function closeAddForm() {
+        addFormOpen = false;
+        $('add-form').hidden = true;
+        $('habit-name').value = '';
+        renderMain();
+      }
+
+      $('add-btn').addEventListener('click', openAddForm);
+      $('empty-add').addEventListener('click', openAddForm);
+      $('add-cancel').addEventListener('click', closeAddForm);
+      $('add-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name = $('habit-name').value.trim();
+        if (!name) { $('habit-name').focus(); return; }
+        api('/api/habits', { method: 'POST', body: { name: name } })
+          .then(function () { addFormOpen = false; $('add-form').hidden = true; $('habit-name').value = ''; return load({ silent: true }); })
+          .catch(function (err) {
+            if (err.status === 409) showSaveError('You already have 5 habits. Remove one to add another.');
+            else if (err.status === 401) showSaveError('Make an account to add a habit.');
+            else showSaveError("Couldn't add that habit. Try again.");
+          });
+      });
+
+      $('edit-btn').addEventListener('click', function () {
+        editing = !editing;
+        renderMain();
+      });
+
+      document.addEventListener('click', function (e) {
+        var el = e.target.closest ? e.target.closest('[data-checkin],[data-remove],[data-more],[data-report],.menu-cancel') : null;
+        if (!el) return;
+        if (el.hasAttribute('data-checkin')) {
+          var habit = state.habits.find(function (h) { return String(h.id) === el.getAttribute('data-checkin'); });
+          if (habit) toggleCheckin(habit);
+        } else if (el.hasAttribute('data-remove')) {
+          var id = el.getAttribute('data-remove');
+          var h2 = state.habits.find(function (h) { return String(h.id) === id; });
+          if (!h2) return;
+          if (window.confirm('Remove "' + h2.name + '"? Its check-ins go with it.')) {
+            api('/api/habits/' + id, { method: 'DELETE' })
+              .then(function () { return load({ silent: true }); })
+              .catch(function () { showSaveError("Couldn't remove that habit. Try again."); });
+          }
+        } else if (el.hasAttribute('data-more')) {
+          var uid = el.getAttribute('data-more');
+          var menu = document.querySelector('[data-menu-for="' + CSS.escape(uid) + '"]');
+          if (menu) menu.hidden = !menu.hidden;
+        } else if (el.hasAttribute('data-report')) {
+          var uid2 = el.getAttribute('data-report');
+          var row = el.closest('.menu-row');
+          api('/api/reports', { method: 'POST', body: { userId: uid2 } })
+            .then(function () {
+              if (row) {
+                row.innerHTML = '<span class="meta grow">Reported. Thank you.</span>';
+                setTimeout(function () { row.hidden = true; }, 1500);
+              }
+            })
+            .catch(function () { showSaveError("Couldn't send that report. Try again."); });
+        } else if (el.classList.contains('menu-cancel')) {
+          el.closest('.menu-row').hidden = true;
+        }
+      });
+
+      $('retry').addEventListener('click', function () { editing = false; addFormOpen = false; load(); });
+
+      load();
+    })();
+  </script>
 </body>
 </html>
