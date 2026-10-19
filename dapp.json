@@ -26,5 +26,9 @@
       "path": "/?demo=1",
       "expectText": "This week's leaderboard"
     }
-  ]
+  ],
+  "visibility": {
+    "build": "public",
+    "view": "public"
+  }
 }
