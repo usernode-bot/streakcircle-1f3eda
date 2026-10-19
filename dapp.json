@@ -7,5 +7,9 @@
   "governance": {
     "preset": "you_or_the_group"
   },
-  "tests": []
+  "tests": [],
+  "visibility": {
+    "build": "public",
+    "view": "public"
+  }
 }
