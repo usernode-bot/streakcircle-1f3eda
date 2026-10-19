@@ -1,0 +1,101 @@
+/* The screens the spec drew, carried over by the platform before the first
+   version was built (screen 1 is public/index.html's main screen; screen 2,
+   if any, its <template data-spec-screen="2">). Colours are the design kit's
+   tokens, rgb(var(--accent)), so they follow the light and the dark look. */
+
+/* Each screen is one centred column: the phone width it was drawn at grows
+   to a readable column on a wider window, never rows and buttons stretched
+   across the window. Remove this only for an app that fills the window by
+   design, such as a map. */
+[data-spec-screen] {
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.app {
+  width: 390px;
+  min-height: 1240px;
+  background: rgb(var(--ground));
+  color: rgb(var(--fg));
+  font-family: ui-rounded,system-ui,-apple-system,sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  box-sizing: border-box;
+  padding: 20px 16px 32px;
+}
+
+.app * {box-sizing:border-box}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.brand {font-size:14px;line-height:20px;font-weight:600;color:rgb(var(--accent))}
+
+.avatar {width:32px;height:32px;border-radius:16px;background:rgb(var(--amber-soft));color:rgb(var(--amber));font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+h1 {font-size:28px;line-height:36px;font-weight:700;margin:8px 0 2px;letter-spacing:-.01em}
+
+.sub {font-size:14px;line-height:20px;color:rgb(var(--muted));margin:0 0 20px}
+
+.section-label {margin:24px 0 8px;padding:0 4px;font-size:14px;line-height:20px;font-weight:500;color:rgb(var(--muted));display:flex;justify-content:space-between;align-items:center}
+
+.link {font:inherit;font-weight:600;color:rgb(var(--accent));background:none;border:0;min-height:44px;padding:0 4px;margin:-12px 0}
+
+.list {list-style:none;margin:0;padding:0;border:1px solid rgb(var(--line));border-radius:12px;background:rgb(var(--surface));overflow:hidden}
+
+.list-row {display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:44px;border-top:1px solid rgb(var(--line))}
+
+.list-row:first-child {border-top:0}
+
+.habit {padding:14px 16px}
+
+.chk {width:52px;height:52px;border-radius:26px;border:2px solid rgb(var(--line));background:rgb(var(--surface));display:flex;align-items:center;justify-content:center;flex:none;color:rgb(var(--on-accent))}
+
+.chk.on {background:rgb(var(--accent));border-color:rgb(var(--accent))}
+
+.grow {flex:1;min-width:0}
+
+.name {font-weight:600}
+
+.meta {font-size:14px;line-height:20px;color:rgb(var(--muted))}
+
+.grace {font-size:14px;line-height:20px;color:rgb(var(--amber))}
+
+.dots {display:flex;gap:5px;margin-top:6px}
+
+.d {width:12px;height:12px;border-radius:6px;border:1.5px solid rgb(var(--line));background:rgb(var(--surface))}
+
+.d.f {background:rgb(var(--accent));border-color:rgb(var(--accent))}
+
+.d.t {border-color:rgb(var(--accent))}
+
+.d.g {border:1.5px dashed rgb(var(--amber));background:rgb(var(--amber-soft))}
+
+.streak {background:rgb(var(--amber-soft));color:rgb(var(--amber));border-radius:999px;padding:4px 10px;font-size:14px;line-height:20px;font-weight:700;flex:none}
+
+.btn-secondary {display:flex;width:100%;min-height:44px;margin-top:12px;align-items:center;justify-content:center;gap:8px;border:1px solid rgb(var(--line));background:rgb(var(--surface));border-radius:8px;font:inherit;font-weight:500;color:rgb(var(--fg))}
+
+.rank {width:24px;font-weight:700;color:rgb(var(--muted));text-align:center;flex:none}
+
+.rank.first {color:rgb(var(--amber))}
+
+.pa {width:36px;height:36px;border-radius:18px;background:rgb(var(--raised));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none}
+
+.you {background:rgb(var(--amber-soft))}
+
+.you .pa {background:rgb(var(--surface))}
+
+.num {text-align:right;flex:none}
+
+.big {font-weight:700}
+
+.bar {height:6px;border-radius:3px;background:rgb(var(--raised));margin-top:6px;overflow:hidden}
+
+.bar i {display:block;height:100%;background:rgb(var(--accent))}
+
+.more {width:44px;height:44px;margin:-8px -12px -8px -4px;border:0;background:none;color:rgb(var(--muted));display:flex;align-items:center;justify-content:center;flex:none}

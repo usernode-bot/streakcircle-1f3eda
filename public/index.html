@@ -78,6 +78,7 @@
        classes, swap this link for the platform-hosted engine instead:
        <script src="/usernode-tailwind/v1/tailwind.js"></script> -->
   <link rel="stylesheet" href="/tailwind.css">
+  <link rel="stylesheet" href="/screens.css">
   <!-- The platform bridge, centrally hosted and loaded by RELATIVE path (the
        handler in server.js serves it under a plain "node server.js"; the
        platform's edge answers it everywhere else). Never vendor it and never
@@ -115,21 +116,45 @@
   <!-- (Named in prose on purpose: Tailwind compiles any class-name word in
        these files, comments included, and the starter should ship only the
        components its screen uses.) -->
-  <main class="mx-auto flex max-w-md flex-col gap-8 px-4 py-10">
+  <!-- usernode-spec-screens@1: the screens the spec drew, carried over by the platform as this
+       first version's starting point. Their styles are in public/screens.css.
+       Change them where behaviour needs it; do not redraw them. -->
+  <div data-spec-screen="1">
+    <div class="app">
+        <div class="top">
+          <div class="brand">StreakCircle</div>
+          <div class="avatar">Y</div>
+        </div>
+        <h1>Thursday check-in</h1>
+        <p class="sub">3 of 4 habits done today</p>
 
-    <!-- usernode-starter-notice@1 — starter-template messaging. When building
-         the user's real app, replace this whole screen and delete this block,
-         both sentinel comments included. -->
-    <section class="card flex flex-col items-start gap-3">
-      <div class="flex h-20 w-20 items-center justify-center rounded-2xl border border-line bg-ground text-title">🔥</div>
-      <span class="rounded-full bg-raised px-3 py-1 text-small font-medium text-muted">Starter template</span>
-      <h1 class="text-title">StreakCircle</h1>
-      <p class="text-body text-muted">Welcome to your new app! Everything on this screen is placeholder content that came with it.</p>
-      <p class="text-body text-muted">To change this app, ask Homeroom bot: tap the <strong class="font-semibold text-fg">Homeroom icon</strong>, then <strong class="font-semibold text-fg">Suggest an improvement</strong>. Describe what you'd like in plain English, and it will be turned into your real app.</p>
-    </section>
-    <!-- /usernode-starter-notice@1 -->
+        <div class="section-label"><span>Your habits, 4 of 5</span><button class="link">Edit</button></div>
+        <ul class="list">
+          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Morning walk</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">12 days</div></li>
+          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Read 20 pages</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">4 days</div></li>
+          <li class="list-row habit"><div class="chk"></div><div class="grow"><div class="name">Stretch for 10 minutes</div><div class="dots"><span class="d f"></span><span class="d g"></span><span class="d f"></span><span class="d t"></span><span class="d"></span><span class="d"></span><span class="d"></span></div><div class="grace">Grace day used Tuesday</div></div><div class="streak">9 days</div></li>
+          <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">No phone after 10pm</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">26 days</div></li>
+        </ul>
+        <button class="btn-secondary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a habit</button>
 
-    <p class="text-center text-small text-muted">Built on Homeroom. This template screen disappears once you build your real app.</p>
-  </main>
+        <div class="section-label"><span>This week's leaderboard</span><span>Most days checked in</span></div>
+        <ul class="list">
+          <li class="list-row"><div class="rank first">1</div><div class="pa">PR</div><div class="grow"><div class="name">Priya</div><div class="bar"><i style="width:57%"></i></div></div><div class="num"><div class="big">4 days</div><div class="meta">12 check-ins</div></div></li>
+          <li class="list-row you"><div class="rank first">1</div><div class="pa">Y</div><div class="grow"><div class="name">You</div><div class="bar"><i style="width:57%"></i></div></div><div class="num"><div class="big">4 days</div><div class="meta">14 check-ins</div></div></li>
+          <li class="list-row"><div class="rank">3</div><div class="pa">MA</div><div class="grow"><div class="name">Marcus</div><div class="bar"><i style="width:43%"></i></div></div><div class="num"><div class="big">3 days</div><div class="meta">6 check-ins</div></div></li>
+          <li class="list-row"><div class="rank">3</div><div class="pa">JO</div><div class="grow"><div class="name">Joan</div><div class="bar"><i style="width:43%"></i></div></div><div class="num"><div class="big">3 days</div><div class="meta">5 check-ins</div></div></li>
+          <li class="list-row"><div class="rank">5</div><div class="pa">TO</div><div class="grow"><div class="name">Tomás</div><div class="bar"><i style="width:14%"></i></div></div><div class="num"><div class="big">1 day</div><div class="meta">1 check-in</div></div></li>
+        </ul>
+
+        <div class="section-label"><span>Everyone's streaks</span><span>Longest running</span></div>
+        <ul class="list">
+          <li class="list-row"><div class="pa">PR</div><div class="grow"><div class="name">Priya</div><div class="meta">Meditate, Journal, Run</div></div><div class="streak">41 days</div><button class="more" aria-label="More for Priya"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
+          <li class="list-row"><div class="pa">MA</div><div class="grow"><div class="name">Marcus</div><div class="meta">Guitar practice, Water</div></div><div class="streak">18 days</div><button class="more" aria-label="More for Marcus"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
+          <li class="list-row"><div class="pa">JO</div><div class="grow"><div class="name">Joan</div><div class="meta">Garden, Read, Stretch</div></div><div class="streak">9 days</div><button class="more" aria-label="More for Joan"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
+          <li class="list-row"><div class="pa">TO</div><div class="grow"><div class="name">Tomás</div><div class="meta">Spanish lesson</div></div><div class="streak">3 days</div><button class="more" aria-label="More for Tomás"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button></li>
+        </ul>
+      </div>
+  </div>
+  <!-- /usernode-spec-screens@1 -->
 </body>
 </html>
