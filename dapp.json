@@ -25,6 +25,11 @@
       "name": "Demo home shows the weekly leaderboard",
       "path": "/?demo=1",
       "expectText": "This week's leaderboard"
+    },
+    {
+      "name": "Demo habits show their total check-ins",
+      "path": "/?demo=1",
+      "expectSelector": "#habits-list .total"
     }
   ],
   "visibility": {

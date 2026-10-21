@@ -66,6 +66,8 @@ h1 {font-size:28px;line-height:36px;font-weight:700;margin:8px 0 2px;letter-spac
 
 .meta {font-size:14px;line-height:20px;color:rgb(var(--muted))}
 
+.total {margin-top:4px}
+
 .grace {font-size:14px;line-height:20px;color:rgb(var(--amber))}
 
 .dots {display:flex;gap:5px;margin-top:6px}

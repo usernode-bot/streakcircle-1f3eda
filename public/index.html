@@ -115,7 +115,7 @@
        The drawn rows are rendered from /api/home data by the script below,
        with the same markup; the drawn habit row is kept here as the row to
        copy:
-       <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Morning walk</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div></div><div class="streak">12 days</div></li> -->
+       <li class="list-row habit"><div class="chk on"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div><div class="grow"><div class="name">Morning walk</div><div class="dots"><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d f"></span><span class="d"></span><span class="d"></span><span class="d"></span></div><div class="meta total">34 check-ins</div></div><div class="streak">12 days</div></li> -->
   <div data-spec-screen="1">
     <div class="app">
       <p class="demo-note" id="demo-note" data-usernode-demo-note hidden>Staging demo: made-up people and habits</p>
@@ -130,10 +130,10 @@
         <div class="skeleton sk-sub"></div>
         <div class="section-label"><span class="skeleton sk-line"></span></div>
         <ul class="list">
-          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
-          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
-          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
-          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
+          <li class="list-row habit"><div class="skeleton sk-chk"></div><div class="grow"><div class="skeleton sk-name"></div><div class="skeleton sk-dots"></div><div class="skeleton sk-subline"></div></div><div class="skeleton sk-badge"></div></li>
         </ul>
         <div class="section-label"><span class="skeleton sk-line"></span></div>
         <ul class="list">
@@ -235,6 +235,10 @@
 
       function plural(n, one, rest) { return n === 1 ? one : rest; }
 
+      function totalText(n) {
+        return n === 0 ? 'No check-ins yet' : plural(n, '1 check-in', n + ' check-ins');
+      }
+
       function api(path, opts) {
         opts = opts || {};
         var url = new URL(path, location.origin);
@@ -285,7 +289,8 @@
           (h.checkedToday ? 'Undo check-in' : 'Check in') + ': ' + esc(h.name) + '">' +
           (h.checkedToday ? CHECK_SVG : '') + '</button>' +
           '<div class="grow"><div class="name">' + esc(h.name) + '</div>' +
-          '<div class="dots">' + dots + '</div>' + grace + '</div>' +
+          '<div class="dots">' + dots + '</div>' + grace +
+          '<div class="meta total">' + totalText(h.total || 0) + '</div></div>' +
           '<div class="streak">' + plural(h.streak, '1 day', h.streak + ' days') + '</div>' +
           remove + '</li>';
       }
@@ -301,6 +306,8 @@
         var idx = (new Date(today + 'T00:00:00Z').getUTCDay() + 6) % 7;
         var dot = li.querySelectorAll('.d')[idx];
         if (dot) dot.className = 'd' + (h.checkedToday ? ' f' : ' t');
+        var tot = li.querySelector('.total');
+        if (tot) tot.textContent = totalText(h.total || 0);
       }
 
       function leaderboardRow(e) {
@@ -395,7 +402,9 @@
       // ── Actions ─────────────────────────────────────────────────────────
       function toggleCheckin(habit) {
         var was = habit.checkedToday;
+        var prevTotal = habit.total || 0;
         habit.checkedToday = !was;
+        habit.total = Math.max(0, prevTotal + (was ? -1 : 1));
         paintHabit(habit);
         var done = state.habits.filter(function (h) { return h.checkedToday; }).length;
         $('subline').textContent = done + ' of ' + state.habits.length + ' habits done today';
@@ -404,6 +413,7 @@
           .then(function () { return load({ silent: true }); })
           .catch(function () {
             habit.checkedToday = was;
+            habit.total = prevTotal;
             paintHabit(habit);
             showSaveError("Couldn't save that check-in. Your streak is unchanged.");
           });
