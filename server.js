@@ -417,6 +417,7 @@ app.get('/api/home', async (req, res) => {
         id: h.id,
         name: h.name,
         checkedToday: checked.has(today),
+        total: checked.size, // every check-in ever made for this habit
         streak: streakFor(checked, todayD, createdOnD),
         graceDay: grace,
         week: weekDots(checked, todayD, grace),
